@@ -11,7 +11,6 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith('/auth') && token) {
     return NextResponse.redirect(new URL('/pos', req.nextUrl))
   }
-  console.log(token)
 
   return NextResponse.next()
 }
