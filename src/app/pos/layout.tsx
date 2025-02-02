@@ -1,7 +1,7 @@
 export default function PosLayout({
   children
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <>
@@ -36,7 +36,7 @@ export default function PosLayout({
                     </a>
                   </li>
                   <li>
-                    <a href="/auth">
+                    <a href="/api/auth/signout">
                       <i className="bx bx-arrow-from-left"></i>Logout
                     </a>
                   </li>
@@ -76,5 +76,5 @@ export default function PosLayout({
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -52,5 +52,6 @@ declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     /** OpenID ID Token */
     idToken?: string
+    role?: string
   }
 }
