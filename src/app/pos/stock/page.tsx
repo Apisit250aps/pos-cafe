@@ -1,10 +1,11 @@
 import CardContent from '@/components/display/card/CardContent';
+import TableData from '@/components/display/table/TableData';
 
 export default function Stock() {
   return (
     <>
       <CardContent title="Inventory">
-        <p className="card-text">This is a sample stock component.</p>
+        <TableData data={[]} map={{}} />
       </CardContent>
     </>
   );

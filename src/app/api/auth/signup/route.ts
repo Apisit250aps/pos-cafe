@@ -29,7 +29,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       email,
       password: hashedPassword,
       role: 'admin',
-      ...{ createAt: new Date() }
+      ...{ createdAt: new Date() }
     })
     if (!user.insertedId) {
       return NextResponse.json({
