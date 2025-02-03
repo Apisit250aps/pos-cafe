@@ -76,6 +76,11 @@ export default function PosLayout({
                 <i className="bx bx-package"></i>Inventory
               </a>
             </li>
+            <li>
+              <a href="/pos/stock/add">
+                <i className="bx bxs-package"></i>Inventory Add
+              </a>
+            </li>
           </ul>
         </div>
       </div>
