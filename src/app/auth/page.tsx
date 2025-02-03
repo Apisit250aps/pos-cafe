@@ -1,5 +1,7 @@
 'use client';
 
+import ButtonLoading from '@/components/actions/button/ButtonLoading';
+import InputField from '@/components/form/input/InputField';
 import { signIn, SignInResponse } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -51,40 +53,24 @@ export default function Auth() {
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
           <form className="card-body" onSubmit={handleSubmit}>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Username</span>
-              </label>
-              <input
-                type="text"
-                placeholder="username"
-                className="input input-bordered"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <input
-                type="password"
-                placeholder="password"
-                className="input input-bordered"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-              />
-            </div>
+            <InputField
+              label={'Username'}
+              placeholder="username"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+            />
+            <InputField
+              label={'Password'}
+              placeholder="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
             <div className="form-control mt-6">
-              <button className="btn btn-outline">
-                {loading ? (
-                  <span className="loading loading-spinner loading-sm"></span>
-                ) : (
-                  <>Login</>
-                )}
-              </button>
+              <ButtonLoading loading={loading} className="btn-outline">
+                Login
+              </ButtonLoading>
             </div>
           </form>
         </div>
