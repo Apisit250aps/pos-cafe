@@ -36,7 +36,7 @@ export default function PosLayout({
                     </a>
                   </li>
                   <li>
-                    <a href="/api/auth/signout">
+                    <a href={'/api/auth/signout'}>
                       <i className="bx bx-arrow-from-left"></i>Logout
                     </a>
                   </li>
@@ -58,6 +58,10 @@ export default function PosLayout({
             <li>
               <a href="/pos">
                 <i className="bx bx-camera-home"></i>POS
+              </a>
+              <a href="/pos/category">
+                <i className="bx bx-library"></i>
+                Category
               </a>
             </li>
             <li className="menu-title">Menus and Products</li>

@@ -1,10 +1,11 @@
 import { db } from '@/libs/database/client';
-import { Document } from 'mongodb';
+import { Document, ObjectId } from 'mongodb';
+import { ICategory } from './category';
 
 export interface IInventory extends Document {
   name: string;
   cost: number;
-  category: string;
+  category: ObjectId | ICategory;
   quantity: number;
   itemQuantity: number;
   itemUnit: string;
