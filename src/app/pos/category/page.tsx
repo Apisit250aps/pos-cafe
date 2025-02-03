@@ -30,8 +30,8 @@ export default function Category() {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
-    limit: 0,
-    totalDocs: 10,
+    limit: 10,
+    totalDocs: 0,
     totalPages: 1
   });
 
