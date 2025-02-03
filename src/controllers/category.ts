@@ -1,5 +1,7 @@
 import category, { ICategory } from '@/models/category';
 import { IResponse, Pagination } from '@/services';
+import { console } from 'inspector';
+import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function createCategory(
@@ -106,5 +108,123 @@ export async function getCategories(
       success: false,
       message: 'Failed to fetch categories'
     });
+  }
+}
+
+export async function updateCategory(
+  req: NextRequest,
+  {
+    params
+  }: {
+    params: Promise<{ id: ObjectId }>;
+  }
+): Promise<NextResponse<IResponse<ICategory>>> {
+  try {
+    const id = (await params).id;
+    console.log(id, '<<');
+    const { name, description, useFor } = await req.json();
+    if (!name || !useFor) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Missing required field or value for category'
+        },
+        { status: 400 }
+      );
+    }
+
+    const update = await category.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          name,
+          description,
+          useFor,
+          updatedAt: new Date()
+        }
+      }
+    );
+    if (update.matchedCount === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Category not found'
+        },
+        { status: 404 }
+      );
+    }
+    if (update.modifiedCount === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Category update failed'
+        },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Category updated successfully',
+        data: {
+          _id: id,
+          name,
+          description,
+          useFor,
+          updatedAt: new Date()
+        }
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Failed to update category'
+      },
+      { status: 500 }
+    );
+  }
+}
+export async function deleteCategory(
+  req: NextRequest,
+  {
+    params
+  }: {
+    params: Promise<{
+      id: ObjectId;
+    }>;
+  }
+): Promise<NextResponse<IResponse>> {
+  try {
+    const { id } = await params;
+    console.log(id, '<<<');
+    const deleteResult = await category.deleteOne({ _id: new ObjectId(id) });
+    if (deleteResult.deletedCount === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Category not found'
+        },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Category deleted successfully'
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Failed to delete category'
+      },
+      { status: 500 }
+    );
   }
 }

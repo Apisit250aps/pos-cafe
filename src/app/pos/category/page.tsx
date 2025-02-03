@@ -10,7 +10,12 @@ import InputField from '@/components/form/input/InputField';
 import SelectField from '@/components/form/input/SelectField';
 import { ICategory } from '@/models/category';
 import { Pagination } from '@/services';
-import { addCategory, fetchCategories } from '@/services/category';
+import {
+  addCategory,
+  editCategory,
+  fetchCategories,
+  removeCategory
+} from '@/services/category';
 import { useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -65,18 +70,35 @@ export default function Category() {
     event.preventDefault();
     try {
       setLoadingForm(true);
-      const { success, message, data } = await addCategory(
-        category as ICategory
-      );
-      closeModal('category-modal');
-      if (!success) {
-        throw new Error(message);
+      if (category._id) {
+        const { success, message, data } = await editCategory(
+          category as ICategory
+        );
+        closeModal('category-modal');
+        if (!success) {
+          throw new Error(message);
+        }
+        Swal.fire({
+          title: message,
+          icon: 'success'
+        });
+        setCategories((prevCategories) =>
+          (prevCategories || []).map((c) => (c._id === data!._id ? data! : c))
+        );
+      } else {
+        const { success, message, data } = await addCategory(
+          category as ICategory
+        );
+        closeModal('category-modal');
+        if (!success) {
+          throw new Error(message);
+        }
+        categories.push(data as ICategory);
+        Swal.fire({
+          title: message,
+          icon: 'success'
+        });
       }
-      categories.push(data as ICategory);
-      Swal.fire({
-        title: message,
-        icon: 'success'
-      });
       setCategory({ name: '', description: '', useFor: 'item' });
     } catch (error) {
       Swal.fire({
@@ -88,6 +110,51 @@ export default function Category() {
       setLoadingForm(false);
     }
   };
+
+  const setAdd = function () {
+    setCategory({ _id: undefined, name: '', description: '', useFor: 'item' });
+    openModal('category-modal');
+  };
+
+  const setEdit = function (cat: ICategory) {
+    setCategory(cat);
+    openModal('category-modal');
+  };
+
+  const setDelete = function (catId: string) {
+    try {
+      Swal.fire({
+        title: 'Delete Category',
+        text: 'Are you sure you want to delete this category?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, keep it'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          setLoadingForm(true);
+          const { success, message } = await removeCategory(catId);
+          if (!success) {
+            throw new Error(message);
+          }
+          Swal.fire({
+            title: message,
+            icon: 'success'
+          });
+          setCategories((prevCategories) =>
+            prevCategories.filter((c) => c._id !== catId)
+          );
+        }
+      });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: error instanceof Error ? error.message : 'An error occurred',
+        icon: 'error'
+      });
+    }
+  };
+
   useEffect(() => {
     fetchCategoryData();
   }, [fetchCategoryData]);
@@ -101,21 +168,26 @@ export default function Category() {
             placeholder="category name"
             autoFocus
             value={category.name}
-            onChange={(e) => setCategory({ ...category, name: e.target.value })}
+            onChange={(e) =>
+              setCategory({ ...category, name: e.target.value.toLowerCase() })
+            }
           />
           <InputField
             label={'Description'}
             placeholder="Description"
             value={category.description}
             onChange={(e) =>
-              setCategory({ ...category, description: e.target.value })
+              setCategory({
+                ...category,
+                description: e.target.value.toLowerCase()
+              })
             }
           />
           <SelectField
             indexDefault
             label={'For'}
             options={['item', 'menu']}
-            value={category.for}
+            value={category.useFor}
             onChange={(e) =>
               setCategory({
                 ...category,
@@ -134,11 +206,7 @@ export default function Category() {
         title="Category"
         actions={
           <>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => openModal('category-modal')}
-            >
+            <button type="button" className="btn" onClick={setAdd}>
               <i className="bx bx-message-square-add"></i>
             </button>
           </>
@@ -152,6 +220,9 @@ export default function Category() {
             description: 'รายละเอียด',
             useFor: 'ใช้สำหรับ'
           }}
+          action
+          onEdit={setEdit}
+          onDelete={setDelete}
         />
       </CardContent>
     </>

@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import React from 'react';
 
 type MapValueType<T extends Record<string, unknown>> = {
@@ -11,7 +10,7 @@ type TableDataProps<T extends Record<string, unknown>> = {
   loading?: boolean;
   action?: boolean;
   onEdit?: (data: T) => void;
-  onDelete?: (data: ObjectId) => void;
+  onDelete?: (data: string) => void;
 };
 
 export default function TableData<T extends Record<string, unknown>>({
@@ -23,9 +22,10 @@ export default function TableData<T extends Record<string, unknown>>({
   onDelete
 }: TableDataProps<T>) {
   const column = Object.keys(map);
+  const addCol = action ? 1 : 0;
   return (
-    <div className="overflow-x-auto">
-      <table border={1} className="table">
+    <div className="overflow-x-auto min-h-96">
+      <table border={1} className="table ">
         <thead>
           <tr>
             {column.map((key, index) => (
@@ -41,7 +41,7 @@ export default function TableData<T extends Record<string, unknown>>({
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan={column.length} className="text-center">
+              <td colSpan={column.length + addCol} className="text-center">
                 <span className="loading loading-dots loading-md"></span>
               </td>
             </tr>
@@ -56,7 +56,7 @@ export default function TableData<T extends Record<string, unknown>>({
                       ))}
                       {action ? (
                         <td>
-                          <div className="dropdown">
+                          <div className="dropdown dropdown-end">
                             <div
                               tabIndex={0}
                               role="button"
@@ -68,21 +68,23 @@ export default function TableData<T extends Record<string, unknown>>({
                               tabIndex={0}
                               className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
                             >
-                              <li>
-                                <a onClick={() => onEdit && onEdit(row)}>
-                                  <i className="bx bx-pencil"></i>Edit
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  onClick={() =>
-                                    onDelete && onDelete(row._id as ObjectId)
-                                  }
-                                  className='text-error'
-                                >
-                                  <i className="bx bx-trash"></i>Delete
-                                </a>
-                              </li>
+                              {onEdit ? (
+                                <li>
+                                  <a onClick={() => onEdit(row)}>
+                                    <i className="bx bx-pencil"></i>Edit
+                                  </a>
+                                </li>
+                              ) : null}
+                              {onDelete ? (
+                                <li>
+                                  <a
+                                    onClick={() => onDelete(row._id as string)}
+                                    className="text-error"
+                                  >
+                                    <i className="bx bx-trash"></i>Delete
+                                  </a>
+                                </li>
+                              ) : null}
                             </ul>
                           </div>
                         </td>
@@ -92,7 +94,7 @@ export default function TableData<T extends Record<string, unknown>>({
                 </>
               ) : (
                 <tr>
-                  <td colSpan={column.length} className="text-center">
+                  <td colSpan={column.length + addCol} className="text-center">
                     Empty
                   </td>
                 </tr>

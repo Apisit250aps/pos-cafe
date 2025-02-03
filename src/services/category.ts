@@ -41,3 +41,36 @@ export async function fetchCategories({
     };
   }
 }
+
+export async function editCategory(
+  category: ICategory
+): Promise<IResponse<ICategory>> {
+  try {
+    const {
+      data: { success, message, data }
+    } = await axios.put<IResponse<ICategory>>(
+      `/api/pos/category/${category._id}`,
+      category
+    );
+    return { success, message, data };
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return { success: false, message: error.response?.data.message };
+    }
+    return { success: false, message: 'Server error' };
+  }
+}
+
+export async function removeCategory(id: string): Promise<IResponse> {
+  try {
+    const {
+      data: { success, message }
+    } = await axios.delete(`/api/pos/category/${id}`);
+    return { success, message };
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return { success: false, message: error.response?.data.message };
+    }
+    return { success: false, message: 'Server error' };
+  }
+}
