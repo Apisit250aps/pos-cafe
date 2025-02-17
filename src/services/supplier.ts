@@ -49,3 +49,44 @@ export async function createSupplier(
     };
   }
 }
+
+export async function updateSupplier(
+  supplier: ISupplier
+): Promise<IResponse<ISupplier>> {
+  try {
+    const response = await axios.put<IResponse<ISupplier>>(
+      `/api/pos/supplier/${supplier._id}`,
+      supplier
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        message: error.response?.data.message
+      };
+    }
+    return {
+      success: false,
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+export async function deleteSupplier(id: string): Promise<IResponse> {
+  try {
+    const response = await axios.delete(`/api/pos/supplier/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        message: error.response?.data.message
+      };
+    }
+    return {
+      success: false,
+      message: 'Internal Server Error'
+    };
+  }
+}

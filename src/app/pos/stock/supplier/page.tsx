@@ -8,7 +8,7 @@ export default function StockSupplier() {
         title="Suppliers"
         actions={
           <>
-            <a href="/pos/stock/supplier/add" className="btn">
+            <a href={'/pos/stock/supplier/!'} className="btn">
               <i className="bx bx-message-square-add"></i>
             </a>
           </>

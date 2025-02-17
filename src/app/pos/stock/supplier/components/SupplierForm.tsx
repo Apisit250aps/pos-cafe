@@ -3,7 +3,7 @@ import OutlineButton from '@/components/form/button/OutlineButton';
 import TextArea from '@/components/form/input/TextArea';
 import TextField from '@/components/form/input/TextField';
 import { ISupplier } from '@/models/suppliers';
-import { createSupplier } from '@/services/supplier';
+import { createSupplier, updateSupplier } from '@/services/supplier';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -34,6 +34,15 @@ export default function SupplierForm({ data }: SupplierFormProps) {
           text: message
         });
         setSupplier({});
+        return;
+      } else {
+        const { success, message } = await updateSupplier(
+          supplier as ISupplier
+        );
+        Swal.fire({
+          icon: success ? 'success' : 'error',
+          text: message
+        });
         return;
       }
     } catch (error) {
@@ -96,7 +105,7 @@ export default function SupplierForm({ data }: SupplierFormProps) {
       />
       <div className="flex justify-end my-5">
         <OutlineButton type="submit" loading={loading} className="min-w-56">
-          Add
+          {data?._id ? <>Edit</> : <>Add</>}
         </OutlineButton>
       </div>
     </form>
