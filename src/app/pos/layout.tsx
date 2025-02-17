@@ -1,4 +1,6 @@
+import SideMenu from '@/components/navigate/menu/SideMenu';
 import Navbar from '@/components/navigate/Navbar';
+import NavLink from '@/components/navigate/NavLink';
 
 export default function PosLayout({
   children
@@ -20,27 +22,24 @@ export default function PosLayout({
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+          <SideMenu>
             {/* Sidebar content here */}
             <li className="menu-title">POS</li>
-            <li>
-              <a href="/pos">
-                <i className="bx bx-camera-home"></i>POS
-              </a>
-            </li>
+            <NavLink href="/pos">
+              <i className="bx bx-camera-home"></i>POS
+            </NavLink>
             <li className="menu-title">Menus and Products</li>
-            <li>
-              <a href="/pos/menu">
-                <i className="bx bx-receipt"></i>Menu
-              </a>
-            </li>
+            <NavLink href="/pos/menu">
+              <i className="bx bx-receipt"></i>Menu
+            </NavLink>
             <li className="menu-title">Stock</li>
-            <li>
-              <a href="/pos/stock">
-                <i className="bx bx-package"></i>Inventory
-              </a>
-            </li>
-          </ul>
+            <NavLink href="/pos/stock">
+              <i className="bx bx-package"></i>Inventory
+            </NavLink>
+            <NavLink href="/pos/stock/supplier">
+              <i className="bx bx-package"></i>Suppliers
+            </NavLink>
+          </SideMenu>
         </div>
       </div>
     </>

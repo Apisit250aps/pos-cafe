@@ -3,7 +3,7 @@ import { IResponse } from '@/types/types';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
-export default async function createSupplier(
+export default async function insertSupplier(
   req: NextRequest
 ): Promise<NextResponse<IResponse<ISupplier>>> {
   try {

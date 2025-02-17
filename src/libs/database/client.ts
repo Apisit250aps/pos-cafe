@@ -4,12 +4,8 @@ import { MongoClient, ServerApiVersion } from 'mongodb'
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
 }
-if (!process.env.MONGODB_DB) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_DB"')
-}
 
 const uri = process.env.MONGODB_URI
-export const dbName = process.env.MONGODB_DB
 const options = {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -38,5 +34,5 @@ if (process.env.NODE_ENV === 'development') {
 
 // Export a module-scoped MongoClient. By doing this in a
 // separate module, the client can be shared across functions.
-export const db = client.db(dbName)
+export const db = client.db()
 export default client

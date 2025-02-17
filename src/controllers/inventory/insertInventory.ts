@@ -2,7 +2,7 @@ import inventories, { IInventory } from '@/models/inventories';
 import { IResponse } from '@/types/types';
 import { NextRequest, NextResponse } from 'next/server';
 
-export default async function createInventory(
+export default async function insertInventory(
   req: NextRequest
 ): Promise<NextResponse<IResponse<IInventory[]>>> {
   try {

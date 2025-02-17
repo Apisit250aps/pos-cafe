@@ -1,26 +1,29 @@
-import suppliers, { ISupplier } from '@/models/suppliers';
+import inventories, { IInventory } from '@/models/inventories';
 import { IResponse, Pagination } from '@/types/types';
 import { NextRequest, NextResponse } from 'next/server';
 
-export default async function allSupplier(
+export default async function findInventory(
   req: NextRequest
-): Promise<NextResponse<IResponse<ISupplier[] & { pagination?: Pagination }>>> {
+): Promise<
+  NextResponse<IResponse<IInventory[] & { pagination?: Pagination }>>
+> {
   try {
     const searchParams = req.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') ?? '1', 10);
     const limit = parseInt(searchParams.get('limit') ?? '10', 10);
     const [data, totalDocs] = await Promise.all([
-      suppliers
+      inventories
         .find({})
         .skip((page - 1) * limit)
         .limit(limit)
+        .sort({ createdAt: -1 })
         .toArray(),
-      suppliers.countDocuments({})
+      inventories.countDocuments({})
     ]);
     return NextResponse.json(
       {
         success: true,
-        message: 'Success',
+        message: 'Inventory fetched successfully',
         data,
         pagination: {
           page,

@@ -1,7 +1,7 @@
 'use client';
 
 import ButtonLoading from '@/components/actions/button/ButtonLoading';
-import InputField from '@/components/form/input/InputField';
+import InputField from '@/components/form/input/TextField';
 import { signIn, SignInResponse } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

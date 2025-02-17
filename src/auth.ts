@@ -1,12 +1,12 @@
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
 import NextAuth from 'next-auth'
-import client, { dbName } from './libs/database/client'
+import client from './libs/database/client'
 import Credentials from 'next-auth/providers/credentials'
 import argon2 from 'argon2'
 import users from './models/users'
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  adapter: MongoDBAdapter(client, { databaseName: dbName }),
+  adapter: MongoDBAdapter(client),
   session: { strategy: 'jwt', maxAge: 86400 },
   providers: [
     Credentials({

@@ -68,3 +68,9 @@ export interface Pagination {
   totalPages: number;
   totalDocs: number;
 }
+
+
+export interface Query {
+  page?: number;
+  limit?: number;
+}

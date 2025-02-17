@@ -1,5 +1,5 @@
-import allInventory from '@/controllers/inventory/allInventory';
-import createInventory from '@/controllers/inventory/createInventory';
+import insertInventory from '@/controllers/inventory/insertInventory';
+import findInventory from '@/controllers/inventory/findInventory';
 
-export { createInventory as POST };
-export { allInventory as GET };
+export { insertInventory as POST };
+export { findInventory as GET };

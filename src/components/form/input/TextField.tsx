@@ -3,7 +3,7 @@ interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
 }
 
-export default function InputField({ label, ...props }: InputFieldProps) {
+export default function TextField({ label, ...props }: InputFieldProps) {
   return (
     <label className="form-control w-full">
       <div className="label">
