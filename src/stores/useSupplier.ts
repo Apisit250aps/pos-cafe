@@ -8,9 +8,10 @@ type SupplierState = {
   page: number;
   limit: number;
   totalPages: number;
+  totalDocs: number;
   loading: boolean;
   error: string | null;
-  loadSuppliers: () => Promise<void>; // เพิ่มฟังก์ชันใน Type
+  loadSuppliers: () => Promise<void>;
 };
 
 const useSupplier = create<SupplierState>((set, get) => ({
@@ -18,11 +19,12 @@ const useSupplier = create<SupplierState>((set, get) => ({
   page: 1,
   limit: 10,
   totalPages: 0,
+  totalDocs: 0,
   loading: false,
   error: null,
   loadSuppliers: async () => {
     set({ loading: true, error: null });
-    const { page, limit } = get(); // ใช้ get() เพื่อดึงค่า state ปัจจุบัน
+    const { page, limit } = get();
     const { data, pagination, success, message } = await fetchSupplier({
       limit,
       page
@@ -33,7 +35,9 @@ const useSupplier = create<SupplierState>((set, get) => ({
         page: pagination!.page,
         limit: pagination!.limit,
         totalPages: pagination!.totalPages,
-        loading: false
+        totalDocs: pagination!.totalDocs,
+        loading: false,
+        error: null
       });
     }
     if (!success) {
