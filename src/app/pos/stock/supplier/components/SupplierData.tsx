@@ -4,7 +4,6 @@ import { fetchSupplier } from '@/services/supplier';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function SupplierData() {
-  
   const [suppliers, setSupplierData] = useState<ISupplier[]>([]);
   const fetchData = useCallback(async () => {
     const { data } = await fetchSupplier({});
@@ -14,7 +13,7 @@ export default function SupplierData() {
     fetchData();
   }, [fetchData]);
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto min-h-96">
       <table className="table">
         {/* head */}
         <thead>
@@ -36,9 +35,26 @@ export default function SupplierData() {
               <td>{supplier.phone}</td>
               <td>{supplier.email}</td>
               <td>
-                <a href={`/pos/stock/supplier/${supplier._id}`} className='btn'>
-                  <div className="bx bx-pencil"></div>
-                </a>
+                <div className="dropdown dropdown-end">
+                  <div tabIndex={0} role="button" className="btn btn-sm m-1">
+                    <i className="bx bx-dots-vertical-rounded"></i>
+                  </div>
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                  >
+                    <li>
+                      <a href={`/pos/stock/supplier/${supplier._id}`}>
+                        <i className="bx bx-pencil"></i>Edit
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <i className="bx bx-trash"></i>Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </td>
             </tr>
           ))}
