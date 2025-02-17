@@ -13,7 +13,12 @@ export default async function createInventory(
         { status: 400 }
       );
     }
-    const insertedInventories = await inventories.insertMany(inventory);
+    const createdAt = new Date();
+    const insert = inventory.map((inv) => ({
+      ...inv,
+      createdAt
+    }));
+    const insertedInventories = await inventories.insertMany(insert);
     if (insertedInventories.insertedCount === 0) {
       throw new Error('Failed to insert inventory data');
     }
