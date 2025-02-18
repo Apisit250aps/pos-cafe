@@ -1,9 +1,9 @@
 'use client';
-import OutlineButton from '@/components/form/button/OutlineButton';
+import Button from '@/components/actions/button/Button';
 import TextArea from '@/components/form/input/TextArea';
 import TextField from '@/components/form/input/TextField';
 import { ISupplier } from '@/models/suppliers';
-import { createSupplier, updateSupplier } from '@/services/supplier';
+import useSupplier from '@/stores/useSupplier';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -14,7 +14,7 @@ interface SupplierFormProps {
 export default function SupplierForm({ data }: SupplierFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [supplier, setSupplier] = useState<Partial<ISupplier>>({});
-
+  const { editSupplier, addSupplier, error } = useSupplier();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -26,22 +26,32 @@ export default function SupplierForm({ data }: SupplierFormProps) {
     try {
       setLoading(true);
       if (!supplier._id) {
-        const { success, message } = await createSupplier(
-          supplier as ISupplier
-        );
+        await addSupplier(supplier as ISupplier);
+        if (error) {
+          Swal.fire({
+            icon: 'error',
+            text: error
+          });
+          return;
+        }
         Swal.fire({
-          icon: success ? 'success' : 'error',
-          text: message
+          icon: 'success',
+          text: 'Supplier added successfully'
         });
         setSupplier({});
         return;
       } else {
-        const { success, message } = await updateSupplier(
-          supplier as ISupplier
-        );
+        await editSupplier(supplier as ISupplier);
+        if (error) {
+          Swal.fire({
+            icon: 'error',
+            text: error
+          });
+          return;
+        }
         Swal.fire({
-          icon: success ? 'success' : 'error',
-          text: message
+          icon: 'success',
+          text: 'Supplier updated successfully'
         });
         return;
       }
@@ -53,7 +63,7 @@ export default function SupplierForm({ data }: SupplierFormProps) {
   };
 
   useEffect(() => {
-    if (data) {
+    if (!!data) {
       setSupplier(data);
     } else {
       setSupplier({});
@@ -104,9 +114,9 @@ export default function SupplierForm({ data }: SupplierFormProps) {
         required
       />
       <div className="flex justify-end my-5">
-        <OutlineButton type="submit" loading={loading} className="min-w-56">
+        <Button type="submit" loading={loading} className="min-w-56 btn-outline">
           {data?._id ? <>Edit</> : <>Add</>}
-        </OutlineButton>
+        </Button>
       </div>
     </form>
   );

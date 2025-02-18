@@ -1,13 +1,37 @@
 'use client';
 
 import useSupplier from '@/stores/useSupplier';
-import { useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 export default function SupplierData() {
-  const { suppliers, loadSuppliers, loading } = useSupplier();
-  useEffect(() => {
-    loadSuppliers();
-  }, [loadSuppliers]);
+  const { error, suppliers, loading, removeSupplier, limit, page } =
+    useSupplier();
+  const handleDelete = async function (id: string) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this supplier!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await removeSupplier(id);
+        if (error) {
+          Swal.fire({
+            icon: 'error',
+            text: error
+          });
+        }
+        Swal.fire({
+          icon: 'success',
+          text: 'Supplier deleted successfully!'
+        });
+      }
+    });
+  };
+
   return (
     <div className="overflow-x-auto min-h-96">
       <table className="table">
@@ -45,7 +69,7 @@ export default function SupplierData() {
                 <>
                   {suppliers.map((supplier, index) => (
                     <tr key={index} className="hover">
-                      <th>{index + 1}</th>
+                      <th>{limit * (page - 1) + index + 1}</th>
                       <td>{supplier.name}</td>
                       <td>{supplier.contract_person}</td>
                       <td>{supplier.phone}</td>
@@ -69,7 +93,11 @@ export default function SupplierData() {
                               </a>
                             </li>
                             <li>
-                              <a>
+                              <a
+                                onClick={() =>
+                                  handleDelete(supplier._id as string)
+                                }
+                              >
                                 <i className="bx bx-trash"></i>Delete
                               </a>
                             </li>

@@ -1,6 +1,11 @@
 'use client';
 import { ISupplier } from '@/models/suppliers';
-import { fetchSupplier } from '@/services/supplier';
+import {
+  createSupplier,
+  deleteSupplier,
+  fetchSupplier,
+  updateSupplier
+} from '@/services/supplier';
 import { create } from 'zustand';
 
 type SupplierState = {
@@ -12,23 +17,21 @@ type SupplierState = {
   loading: boolean;
   error: string | null;
   loadSuppliers: () => Promise<void>;
+  addSupplier: (supplier: ISupplier) => Promise<void>;
+  editSupplier: (supplier: ISupplier) => Promise<void>;
+  removeSupplier: (supplier: string) => Promise<void>;
+  setPage: (page: number) => void;
+  setLimit: (limit: number) => void;
 };
-
-const useSupplier = create<SupplierState>((set, get) => ({
-  suppliers: [],
-  page: 1,
-  limit: 10,
-  totalPages: 0,
-  totalDocs: 0,
-  loading: false,
-  error: null,
-  loadSuppliers: async () => {
+const useSupplier = create<SupplierState>((set, get) => {
+  const loadSuppliers = async () => {
     set({ loading: true, error: null });
     const { page, limit } = get();
     const { data, pagination, success, message } = await fetchSupplier({
       limit,
       page
     });
+
     if (success) {
       set({
         suppliers: data,
@@ -39,11 +42,83 @@ const useSupplier = create<SupplierState>((set, get) => ({
         loading: false,
         error: null
       });
+    } else {
+      set({ loading: false, error: message });
     }
-    if (!success) {
+  };
+  async function addSupplier(supplier: ISupplier) {
+    set({ loading: true, error: null });
+    const { success, message, data } = await createSupplier(supplier);
+    if (success) {
+      set((state) => ({
+        suppliers: [...state.suppliers, data!],
+        totalDocs: state.totalDocs + 1,
+        totalPages: Math.ceil((state.totalDocs + 1) / state.limit),
+        loading: false,
+        error: null
+      }));
+    } else {
       set({ loading: false, error: message });
     }
   }
-}));
+  async function editSupplier(supplier: ISupplier) {
+    set({ loading: true, error: null });
+    const { success, message } = await updateSupplier(supplier);
+
+    if (success) {
+      const index = get().suppliers.findIndex((s) => s._id === supplier._id);
+      if (index !== -1) {
+        set((state) => ({
+          suppliers: [
+            ...state.suppliers.slice(0, index),
+            supplier,
+            ...state.suppliers.slice(index + 1)
+          ],
+          loading: false,
+          error: null
+        }));
+      }
+    } else {
+      set({ loading: false, error: message });
+    }
+  }
+  async function removeSupplier(supplier: string) {
+    set({ loading: true, error: null });
+    const { success, message } = await deleteSupplier(supplier);
+    if (success) {
+      set((state) => ({
+        suppliers: state.suppliers.filter((s) => s._id !== supplier),
+        totalDocs: state.totalDocs - 1,
+        totalPages: Math.ceil(state.totalDocs / state.limit),
+        loading: false,
+        error: null
+      }));
+    } else {
+      set({ loading: false, error: message });
+    }
+  }
+  loadSuppliers();
+  return {
+    suppliers: [],
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+    totalDocs: 0,
+    loading: false,
+    error: null,
+    loadSuppliers,
+    addSupplier,
+    editSupplier,
+    removeSupplier,
+    setPage: (page: number) => {
+      set({ page });
+      loadSuppliers();
+    },
+    setLimit: (limit: number) => {
+      set({ limit, page: 1 });
+      loadSuppliers();
+    }
+  };
+});
 
 export default useSupplier;

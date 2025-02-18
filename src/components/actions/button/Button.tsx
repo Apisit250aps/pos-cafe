@@ -1,15 +1,15 @@
-interface ButtonLoadingProps
+interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   className?: string; // Additional class name for the button container.
   children?:React.ReactNode
 }
-export default function ButtonLoading({
+export default function Button({
   children,
   loading = false,
   className,
   ...props
-}: ButtonLoadingProps) {
+}: ButtonProps) {
   return (
     <>
       <button className={`btn ${className}`} {...props}>
