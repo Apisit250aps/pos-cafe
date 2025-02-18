@@ -16,7 +16,7 @@ export default function PaginationButton({
       >
         «
       </button>
-      <button className="join-item btn">Page {page}</button>
+      <button className="join-item btn">Page {page} / {totalPage}</button>
       <button
         className="join-item btn"
         onClick={() => set(Math.min(page + 1, totalPage))}

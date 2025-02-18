@@ -1,12 +1,18 @@
+import CardContent from '@/components/display/CardContent';
+
 export default function Stock() {
   return (
     <>
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Stock</h5>
-          <p className="card-text">This is a sample stock component.</p>
-        </div>
-      </div>
+      <CardContent
+        title="Inventory"
+        actions={
+          <>
+            <a href="/pos/stock/input" className="btn">
+              <i className="bx bx-message-square-add"></i>
+            </a>
+          </>
+        }
+      ></CardContent>
     </>
-  )
+  );
 }
