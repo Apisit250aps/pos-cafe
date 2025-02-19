@@ -24,6 +24,7 @@ type SupplierState = {
   setLimit: (limit: number) => void;
 };
 const useSupplier = create<SupplierState>((set, get) => {
+  const suppliers = [] as ISupplier[];
   const loadSuppliers = async () => {
     set({ loading: true, error: null });
     const { page, limit } = get();
@@ -99,7 +100,7 @@ const useSupplier = create<SupplierState>((set, get) => {
   }
   loadSuppliers();
   return {
-    suppliers: [],
+    suppliers,
     page: 1,
     limit: 10,
     totalPages: 0,

@@ -32,7 +32,7 @@ export async function createInventory(
 ): Promise<IResponse<IInventory[]>>{
   try {
     const response = await axios.post<IResponse<IInventory[]>>(
-      '/pos/inventory',
+      '/api/pos/inventory',
       inventory
     );
     return response.data;
