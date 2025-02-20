@@ -28,7 +28,8 @@ export default async function insertInventory(
     await transactions.insertOne({
       items: inserted.map((id) => id.toString()) as string[],
       type: "in",
-      quantity: quantity
+      quantity: quantity,
+      createdAt
     } as ITransaction)
     return NextResponse.json(
       { success: true, message: "Success", data: inventory },

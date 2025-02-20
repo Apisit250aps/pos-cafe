@@ -9,7 +9,7 @@ export async function fetchInventory({
   try {
     const response = await axios.get<
       IResponse<IInventory[]> & { pagination?: Pagination }
-    >('/pos/inventory', {
+    >('/api/pos/inventory', {
       params: { limit, page }
     });
     return response.data;
